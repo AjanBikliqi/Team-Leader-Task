@@ -43,18 +43,19 @@ class QuotationModel {
         .map((lineItemJson) => LineItemModel.fromJson(lineItemJson))
         .toList();
 
-    final String jsonImages = json['images'] ?? "[]";
+    final String jsonImages = json['images'] ?? [];
     final List<String> images = List<String>.from(jsonDecode(jsonImages));
 
     return QuotationModel(
-        id: json['id'],
-        title: json['title'],
-        customerInfo: json['customerInfo'],
-        companyName: json['companyName'],
-        companyAddress: json['companyAddress'],
-        emailAddress: json['emailAddress'],
-        vatNumber: json['vatNumber'],
-        lineItems: lineItems,
-        images: images);
+      id: json['id'],
+      title: json['title'],
+      customerInfo: json['customerInfo'],
+      companyName: json['companyName'],
+      companyAddress: json['companyAddress'],
+      emailAddress: json['emailAddress'],
+      vatNumber: json['vatNumber'],
+      lineItems: lineItems,
+      images: images,
+    );
   }
 }

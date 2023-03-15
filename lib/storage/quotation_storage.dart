@@ -28,6 +28,5 @@ class QuotationStorage {
       quotationsJson[index] = jsonEncode(quotation.toJson());
     }
     prefs.setStringList(_key, quotationsJson);
-    print("Saved quotations: ${prefs.getStringList(_key)}");
   }
 }

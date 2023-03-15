@@ -54,62 +54,65 @@ class _QuotationDetailScreenState extends State<QuotationDetailScreen> {
     }
   }
 
-  void _deleteLineItem(LineItemModel lineItem) {
+  void _deleteSelectedLineItem(LineItemModel lineItem) {
     setState(() {
       _quotation.lineItems.remove(lineItem);
     });
   }
 
-  selectImage() async {
+  void _deleteSelectedPicture(String path) {
+    setState(() {
+      _quotation.images.remove(path);
+    });
+  }
+
+  _selectImage() async {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Center(child: Text('Choose')),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      ElevatedButton(
-                          child: Text('Camera'),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            final pickedFile = await _imagePicker.pickImage(
-                                source: ImageSource.camera);
-                            if (pickedFile != null) {
-                              setState(() {
-                                _quotation.images.add(pickedFile.path);
-                                print(
-                                    "Selected image path: ${pickedFile.path}");
-                                print(
-                                    "Updated list of images: ${_quotation.images}");
-                              });
-                            }
-                          }),
-                      ElevatedButton(
-                          child: Text('Gallery'),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            final pickedFile = await _imagePicker.pickImage(
-                                source: ImageSource.gallery);
-                            if (pickedFile != null) {
-                              setState(() {
-                                _quotation.images.add(pickedFile.path);
-                                print(
-                                    "Selected image path: ${pickedFile.path}");
-                                print(
-                                    "Updated list of images: ${_quotation.images}");
-                              });
-                            }
-                          })
-                    ])
-              ],
-            ),
-          );
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(child: Text('Choose')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  ElevatedButton(
+                      child: const Text('Camera'),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        final pickedFile = await _imagePicker.pickImage(
+                            source: ImageSource.camera);
+                        if (pickedFile != null) {
+                          setState(() {
+                            _quotation.images.add(pickedFile.path);
+                          });
+                        }
+                      }),
+                  ElevatedButton(
+                    child: const Text('Gallery'),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      final pickedFile = await _imagePicker.pickImage(
+                          source: ImageSource.gallery);
+                      if (pickedFile != null) {
+                        setState(
+                          () {
+                            _quotation.images.add(pickedFile.path);
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -200,7 +203,7 @@ class _QuotationDetailScreenState extends State<QuotationDetailScreen> {
                 title: Text(lineItem.title),
                 trailing: Text('${lineItem.totalPrice}'),
                 onTap: () => _navigateToLineItemDetailScreen(lineItem),
-                onLongPress: () => _deleteLineItem(lineItem),
+                onLongPress: () => _deleteSelectedLineItem(lineItem),
               ),
             ),
             const SizedBox(height: 8),
@@ -218,9 +221,9 @@ class _QuotationDetailScreenState extends State<QuotationDetailScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              child: Text("Add Image"),
+              child: const Text("Add Image"),
               onPressed: () async {
-                await selectImage();
+                await _selectImage();
               },
             ),
             _quotation.images.isEmpty
@@ -229,9 +232,16 @@ class _QuotationDetailScreenState extends State<QuotationDetailScreen> {
                     mainAxisSpacing: 5.0,
                     shrinkWrap: true,
                     crossAxisCount: 3,
-                    children: _quotation.images.map((path) {
-                      return Image.file(File(path));
-                    }).toList(),
+                    children: _quotation.images.map(
+                      (path) {
+                        return GestureDetector(
+                          onLongPress: () => _deleteSelectedPicture(path),
+                          child: Image.file(
+                            File(path),
+                          ),
+                        );
+                      },
+                    ).toList(),
                   ),
             ElevatedButton(
               onPressed: () {
