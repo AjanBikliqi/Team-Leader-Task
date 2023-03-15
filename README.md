@@ -16,6 +16,6 @@ Create New Quotation Screen.
 Update Quotation
 
 1. In the Quotation Overview Screen you can click any quotation to redirect to Update Quotation screen to edit/update the quotation.
-2. In this screen you can edit details or remove details like the line items on long press and edit the quotation name etc by just changing the text and pressing save.
+2. In this screen you can edit details or remove details like the line items or the images when you long press, and you can edit the quotation name etc by just changing the text and pressing save.
 
 Note: the Create New Quotation Screen and the Update Quotation Screen is the same one for a better experience and refactor reasons so we can have one screen for both functionalities.
